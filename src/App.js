@@ -1,28 +1,47 @@
-import React, { Component } from 'react';
-import logo from './logo.svg';
-import './App.css';
+import './App.css'
+import React, {Component} from 'react';
+import {BrowserRouter, Route} from 'react-router-dom';
+import Profile from "./components/Profile/Profile";
+import connect from "react-redux/es/connect/connect";
+import LogIn from "./components/LogInForm/LogIn";
+import SingUp from "./components/SignUpForm/SingUp";
+import {PrivateRoute} from "./_components";
 
 class App extends Component {
-  render() {
-    return (
-      <div className="App">
-        <header className="App-header">
-          <img src={logo} className="App-logo" alt="logo" />
-          <p>
-            Edit <code>src/App.js</code> and save to reload.
-          </p>
-          <a
-            className="App-link"
-            href="https://reactjs.org"
-            target="_blank"
-            rel="noopener noreferrer"
-          >
-            Learn React
-          </a>
-        </header>
-      </div>
-    );
-  }
+
+
+    render() {
+        const {alert} = this.props;
+        return (
+
+            <div className="app-wrapper">
+                <div>
+                    {alert.message &&
+                    <div className={`alert ${alert.type}`}>{alert.message}</div>
+                    }
+                </div>
+
+                <BrowserRouter >
+
+                    <div className='app-wrapper-content'>
+                        <PrivateRoute exact path='/' component={Profile}/>
+                        <Route path='/signUp' component={SingUp}/>
+                        <Route path='/login' component={LogIn}/>
+                    </div>
+                </BrowserRouter>
+
+            </div>
+        )
+    }
 }
 
-export default App;
+function mapStateToProps(state) {
+    const {alert} = state;
+    return {
+        alert
+    };
+}
+
+const connectedApp = connect(mapStateToProps)(App);
+
+export default connectedApp;
